@@ -1,0 +1,12 @@
+requests
+beautifulsoup4
+pandas
+tkinter
+matplotlib
+unittest
+seaborn
+wordcloud
+textblob
+nltk
+pillow
+urllib3

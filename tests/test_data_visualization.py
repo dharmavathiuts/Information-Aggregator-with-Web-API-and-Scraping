@@ -1,5 +1,10 @@
 import unittest
 import pandas as pd
+import sys, os
+
+
+# Add root to path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data_visualization import DataVisualization
 
 class TestDataVisualization(unittest.TestCase):
@@ -16,16 +21,22 @@ class TestDataVisualization(unittest.TestCase):
         self.visualization = DataVisualization(self.cleaned_data)
 
     def test_plot_article_distribution_by_source(self):
-        self.visualization.plot_article_distribution_by_source()
-        # Add more assertions here if necessary
+        try:
+            self.visualization.plot_article_distribution_by_source()
+        except Exception as e:
+            self.fail(f"plot_article_distribution_by_source() raised an exception: {e}")
 
     def test_plot_sentiment_analysis(self):
-        self.visualization.plot_sentiment_analysis()
-        # Add more assertions here if necessary
+        try:
+            self.visualization.plot_sentiment_analysis()
+        except Exception as e:
+            self.fail(f"plot_sentiment_analysis() raised an exception: {e}")
 
     def test_plot_trending_keywords(self):
-        self.visualization.plot_trending_keywords()
-        # Add more assertions here if necessary
+        try:
+            self.visualization.plot_trending_keywords()
+        except Exception as e:
+            self.fail(f"plot_trending_keywords() raised an exception: {e}")
 
 if __name__ == '__main__':
     unittest.main()

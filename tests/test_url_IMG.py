@@ -1,22 +1,29 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from tkinter import Tk
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from url_IMG import NewsApp
 
 class TestNewsApp(unittest.TestCase):
+    def setUp(self):
+        # Patch requests.get
+        patcher = patch('url_IMG.requests.get')
+        self.mock_get = patcher.start()
+        self.addCleanup(patcher.stop)
 
-    @patch('url_IMG.requests.get')
-    def setUp(self, mock_get):
+        # Create GUI instance
         self.root = Tk()
         self.app = NewsApp(self.root)
         self.maxDiff = None
 
-        # Mock API response
+        # Mocked NewsAPI JSON response
         self.mock_response = {
             'status': 'ok',
             'totalResults': 2,
-            'articles': 
-            [
+            'articles': [
                 {
                     'source': {'id': None, 'name': 'Test Source 1'},
                     'author': 'Test Author 1',
@@ -39,7 +46,7 @@ class TestNewsApp(unittest.TestCase):
                 }
             ]
         }
-        mock_get.return_value.json.return_value = self.mock_response
+        self.mock_get.return_value.json.return_value = self.mock_response
 
     def tearDown(self):
         self.root.destroy()
@@ -55,8 +62,7 @@ class TestNewsApp(unittest.TestCase):
         mock_event.widget.cget.return_value = 'technology'
         
         self.app.load_news_item(mock_event)
-        
-        self.assertCountEqual(self.app.data, self.mock_response)
+        self.assertEqual(self.app.data, self.mock_response)
         mock_clear.assert_called_once()
 
     @patch('url_IMG.NewsApp.clear')
@@ -79,9 +85,9 @@ class TestNewsApp(unittest.TestCase):
         self.assertEqual(F1.winfo_children()[3].cget('text'), article['publishedAt'])
         
         buttons = F1.winfo_children()[4].winfo_children()
-        self.assertEqual(len(buttons), 2)  # Read More, Next
+        self.assertEqual(len(buttons), 2)
 
-        # Test the read more button
+        # Simulate clicking "Read More"
         buttons[0].invoke()
         mock_webbrowser_open.assert_called_once_with(article['url'])
 

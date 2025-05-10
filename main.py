@@ -1,4 +1,4 @@
-from gui import NewsAggregatorGUI
+from gui_app import NewsAggregatorGUI
 import json
 
 if __name__ == "__main__":
